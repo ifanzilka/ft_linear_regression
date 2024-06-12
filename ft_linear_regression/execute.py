@@ -80,13 +80,14 @@ def parameter_search(model, dataset, param_grid, scoring=MSE):
     for params in product(*values):
         kwargs = dict(zip(keys, params))
         #print(kwargs)
+        #print(kwargs)
         test_model = model(**kwargs, experiment_name = f"exp_{exp_count}")
         test_model.fit(X_train, y_train, 1000)
         
         predictions = test_model.predict(X_valid)
         score = scoring(y_valid, predictions)
         loss = test_model.calculate_cost_function(test_model._plan_matrix(X_valid), y_valid)
-
+        test_model.save(f"./checkpoints/model_{exp_count}.pickle")
         if test_model.neptune_logger is not None:
             test_model.neptune_logger.log_final_val_mse(score)
             test_model.neptune_logger.log_final_val_loss(loss)

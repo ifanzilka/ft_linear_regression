@@ -29,6 +29,17 @@ class LinearRegression():
 
     # Methods related to the Normal Equation
 
+    def __getstate__(self):
+        """Удаляет несериализуемые объекты перед сохранением."""
+        state = self.__dict__.copy()
+        state['neptune_logger'] = None  # Исключаем `Logger` из сериализации
+        return state
+
+    def __setstate__(self, state):
+        """Восстанавливает состояние объекта после загрузки."""
+        self.__dict__.update(state)
+        # Восстановление `Logger` после загрузки не предусмотрено,
+        # можно добавить дополнительную логику для восстановления, если это необходимо
     
     # Methods related to the Normal Equation
     def _pseudoinverse_matrix(self, matrix: np.ndarray) -> np.ndarray:
